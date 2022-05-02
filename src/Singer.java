@@ -1,4 +1,6 @@
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 import javax.swing.*;
@@ -9,13 +11,25 @@ public class Singer implements IOption {
 
 	public Singer(JFrame frame) {
 		this.frame = frame;
+		JButton backButton = new JButton("Back");
+		backButton.setBounds(10, 392, 89, 23);
+		frame.getContentPane().add(backButton);
+		backAction(backButton);
+	}
+	
+	private void backAction(JButton backButton) {
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getContentPane().removeAll();
+				frame.revalidate();
+				frame.repaint();
+				new GUI().initialize(frame);
+			}
+		});
 	}
 
 	@Override
 	public void retrieve() {
-		frame.getContentPane().removeAll();
-		frame.repaint();
-
 		JLabel lblNewLabel = new JLabel("Retrieve Singers:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel.setBounds(10, 10, 200, 20);
@@ -28,9 +42,6 @@ public class Singer implements IOption {
 
 	@Override
 	public void insert() {
-		frame.getContentPane().removeAll();
-		frame.repaint();
-
 		JLabel insertLabel = new JLabel("Insert Singer:");
 		insertLabel.setBounds(10, 10, 200, 20);
 
@@ -86,9 +97,6 @@ public class Singer implements IOption {
 
 	@Override
 	public void delete() {
-		frame.getContentPane().removeAll();
-		frame.repaint();
-
 		JLabel lblNewLabel = new JLabel("Delete Singer:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel.setBounds(10, 10, 200, 20);
