@@ -1,4 +1,6 @@
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import javax.swing.*;
 
@@ -8,12 +10,38 @@ public class Song implements IOption {
 
 	public Song(JFrame frame) {
 		this.frame = frame;
+		this.frame.getContentPane().removeAll();
+		this.frame.repaint();
+		JButton proceedButton = new JButton("Proceed");
+		proceedButton.setBounds(535, 392, 89, 23);
+		frame.getContentPane().add(proceedButton);
+		
+		JButton backButton = new JButton("Back");
+		backButton.setBounds(10, 392, 89, 23);
+		frame.getContentPane().add(backButton);
+		backAction(backButton);
+	}
+
+	private void proceedAction(JButton proceedButton) {
+		proceedButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+	}
+	
+	private void backAction(JButton backButton) {
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getContentPane().removeAll();
+				frame.revalidate();
+				frame.repaint();
+				new GUI().initialize(frame);
+			}
+		});
 	}
 
 	public void retrieve() {
-		frame.getContentPane().removeAll();
-		frame.repaint();
-
 		JLabel lblNewLabel = new JLabel("Retrieve Songs:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel.setBounds(10, 10, 200, 20);
@@ -25,9 +53,6 @@ public class Song implements IOption {
 	}
 
 	public void insert() {
-		frame.getContentPane().removeAll();
-		frame.repaint();
-
 		JLabel insertLabel = new JLabel("Insert Song:");
 		insertLabel.setBounds(10, 10, 200, 20);
 
@@ -75,18 +100,14 @@ public class Song implements IOption {
 		});
 	}
 
-
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void delete() {
-		frame.getContentPane().removeAll();
-		frame.repaint();
-
 		JLabel lblNewLabel = new JLabel("Delete Song:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel.setBounds(10, 10, 200, 20);
@@ -94,7 +115,7 @@ public class Song implements IOption {
 
 		JTextField textField = new JTextField();
 		textField.setBounds(120, 9, 150, 22);
-		frame.getContentPane().add(textField);		
+		frame.getContentPane().add(textField);
 	}
 
 	@Override

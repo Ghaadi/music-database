@@ -30,18 +30,18 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
-		initialize();
+		frame = new JFrame();
+		frame.setBounds(150, 150, 650, 465);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		initialize(frame);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(150, 150, 650, 465);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+	void initialize(JFrame frame) {
 
 		JLabel lblNewLabel = new JLabel("Choose an action:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -93,8 +93,11 @@ public class GUI {
 
 		frame.getContentPane().add(comboBox);
 
-		JButton btnNewButton = new JButton("Proceed");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton proceedButton = new JButton("Proceed");
+		proceedButton.setBounds(535, 392, 89, 23);
+		frame.getContentPane().add(proceedButton);
+
+		proceedButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (btnGroup.isSelected(null)) {
 					JLabel lblNewLabel_1 = new JLabel("Please choose an option");
@@ -135,9 +138,6 @@ public class GUI {
 				}
 			}
 		});
-
-		btnNewButton.setBounds(535, 392, 89, 23);
-		frame.getContentPane().add(btnNewButton);
 
 	}
 
