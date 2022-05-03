@@ -3,33 +3,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import javax.swing.*;
+import java.sql.*;
 
 public class Song implements IOption {
 
 	final private JFrame frame;
-
-	public Song(JFrame frame) {
+	final private Connection connection;
+	
+	public Song(JFrame frame, Connection c) {
 		this.frame = frame;
 		this.frame.getContentPane().removeAll();
 		this.frame.repaint();
+		
 		JButton proceedButton = new JButton("Proceed");
 		proceedButton.setBounds(535, 392, 89, 23);
 		frame.getContentPane().add(proceedButton);
-		
+
 		JButton backButton = new JButton("Back");
 		backButton.setBounds(10, 392, 89, 23);
 		frame.getContentPane().add(backButton);
 		backAction(backButton);
+		
+		this.connection = c;
 	}
 
 	private void proceedAction(JButton proceedButton) {
 		proceedButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
 	}
-	
+
 	private void backAction(JButton backButton) {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -61,35 +66,23 @@ public class Song implements IOption {
 		JTextField titleField = new JTextField();
 		titleField.setBounds(10, 70, 200, 25);
 
-		JLabel artistLabel = new JLabel("Artist");
-		artistLabel.setBounds(10, 100, 200, 14);
-		JTextField artistField = new JTextField();
-		artistField.setBounds(10, 120, 200, 25);
+		JLabel releasableIdLabel = new JLabel("Releasable ID");
+		releasableIdLabel.setBounds(10, 100, 200, 14);
+		JTextField releasableIdField = new JTextField();
+		releasableIdField.setBounds(10, 120, 200, 25);
 
-		JLabel genreLabel = new JLabel("Genre");
-		genreLabel.setBounds(10, 150, 200, 14);
-		JTextField genreField = new JTextField();
-		genreField.setBounds(10, 170, 200, 25);
+		JLabel musicIdLabel = new JLabel("Music ID");
+		musicIdLabel.setBounds(10, 150, 200, 14);
+		JTextField musicIdField = new JTextField();
+		musicIdField.setBounds(10, 170, 200, 25);
 
-		JLabel releaseDateLabel = new JLabel("Release Date");
-		releaseDateLabel.setBounds(10, 200, 200, 14);
-		JTextField releaseDateField = new JTextField();
-		releaseDateField.setBounds(10, 220, 200, 25);
+		JLabel albumIdLabel = new JLabel("Album ID");
+		albumIdLabel.setBounds(10, 200, 200, 14);
+		JTextField albumIdField = new JTextField();
+		albumIdField.setBounds(10, 220, 200, 25);
 
-		JLabel durationLabel = new JLabel("Duration");
-		durationLabel.setBounds(10, 250, 200, 14);
-		JTextField durationField = new JTextField();
-		durationField.setBounds(10, 270, 200, 25);
-
-		JLabel recordLabelNameLabel = new JLabel("Record Label Name");
-		recordLabelNameLabel.setBounds(10, 300, 200, 14);
-		JTextField recordLabelNameField = new JTextField();
-		recordLabelNameField.setBounds(10, 320, 200, 25);
-
-		JLabel[] labels = { insertLabel, titleLabel, artistLabel, genreLabel, releaseDateLabel, durationLabel,
-				recordLabelNameLabel };
-		JTextField[] textFields = { titleField, artistField, genreField, releaseDateField, durationField,
-				recordLabelNameField };
+		JLabel[] labels = { insertLabel, titleLabel, releasableIdLabel, musicIdLabel, albumIdLabel };
+		JTextField[] textFields = { titleField, releasableIdField, musicIdField, albumIdField };
 
 		Arrays.asList(labels).forEach((JLabel label) -> {
 			frame.add(label);

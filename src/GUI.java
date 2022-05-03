@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.sql.*;
 
 public class GUI {
 
@@ -24,6 +25,9 @@ public class GUI {
 				}
 			}
 		});
+
+		
+
 	}
 
 	/**
@@ -42,102 +46,127 @@ public class GUI {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	void initialize(JFrame frame) {
+		
+		String url = "jdbc:mysql://localhost/PROJECT";
+		String username = "root";
+		String password = "ghadi123";
 
-		JLabel lblNewLabel = new JLabel("Choose an action:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel.setBounds(10, 10, 119, 14);
-		frame.getContentPane().add(lblNewLabel);
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection c = DriverManager.getConnection(url, username, password); // do something with connection\
+			
+			JLabel lblNewLabel = new JLabel("Choose an action:");
+			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel.setBounds(10, 10, 119, 14);
+			frame.getContentPane().add(lblNewLabel);
 
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] { "", "Retrieve", "Insert", "Update", "Delete" }));
-		comboBox.setBounds(139, 9, 91, 22);
-		ButtonGroup btnGroup = new ButtonGroup();
+			JComboBox comboBox = new JComboBox();
+			comboBox.setModel(new DefaultComboBoxModel(new String[] { "", "Retrieve", "Insert", "Update", "Delete" }));
+			comboBox.setBounds(139, 9, 91, 22);
+			ButtonGroup btnGroup = new ButtonGroup();
 
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (!comboBox.getSelectedItem().equals(null)) {
-					JRadioButton radioBtn1 = new JRadioButton("Songs");
-					radioBtn1.setBounds(10, 50, 109, 23);
-					frame.getContentPane().add(radioBtn1);
+			comboBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (!comboBox.getSelectedItem().equals(null)) {
+						JRadioButton radioBtn1 = new JRadioButton("Artists");
+						radioBtn1.setBounds(10, 50, 109, 23);
+						frame.getContentPane().add(radioBtn1);
 
-					JRadioButton radioBtn2 = new JRadioButton("Albums");
-					radioBtn2.setBounds(10, 70, 109, 23);
-					frame.getContentPane().add(radioBtn2);
+						JRadioButton radioBtn2 = new JRadioButton("Record Labels");
+						radioBtn2.setBounds(10, 70, 109, 23);
+						frame.getContentPane().add(radioBtn2);
 
-					JRadioButton radioBtn3 = new JRadioButton("Playlists");
-					radioBtn3.setBounds(10, 90, 109, 23);
-					frame.getContentPane().add(radioBtn3);
+						JRadioButton radioBtn3 = new JRadioButton("Releasables");
+						radioBtn3.setBounds(10, 90, 109, 23);
+						frame.getContentPane().add(radioBtn3);
 
-					JRadioButton radioBtn4 = new JRadioButton("Singers");
-					radioBtn4.setBounds(10, 110, 109, 23);
-					frame.getContentPane().add(radioBtn4);
+						JRadioButton radioBtn4 = new JRadioButton("Users");
+						radioBtn4.setBounds(10, 110, 109, 23);
+						frame.getContentPane().add(radioBtn4);
 
-					JRadioButton radioBtn5 = new JRadioButton("Bands");
-					radioBtn5.setBounds(10, 130, 109, 23);
-					frame.getContentPane().add(radioBtn5);
+						JRadioButton radioBtn5 = new JRadioButton("Awards");
+						radioBtn5.setBounds(10, 130, 109, 23);
+						frame.getContentPane().add(radioBtn5);
 
-					JRadioButton radioBtn6 = new JRadioButton("Users");
-					radioBtn6.setBounds(10, 150, 109, 23);
-					frame.getContentPane().add(radioBtn6);
+						JRadioButton radioBtn6 = new JRadioButton("Playlists");
+						radioBtn6.setBounds(10, 150, 109, 23);
 
-					btnGroup.add(radioBtn1);
-					btnGroup.add(radioBtn2);
-					btnGroup.add(radioBtn3);
-					btnGroup.add(radioBtn4);
-					btnGroup.add(radioBtn5);
-					btnGroup.add(radioBtn6);
-					frame.repaint();
-				}
-			}
-		});
+						if (comboBox.getSelectedItem().equals("Retrieve") || comboBox.getSelectedItem().equals("Delete")) {
+							frame.getContentPane().add(radioBtn6);
+						}
+						
+//						frame.getContentPane().add(radioBtn5);
+	//
+//						JRadioButton radioBtn6 = new JRadioButton("Users");
+//						radioBtn6.setBounds(10, 150, 109, 23);
+//						frame.getContentPane().add(radioBtn6);
 
-		frame.getContentPane().add(comboBox);
-
-		JButton proceedButton = new JButton("Proceed");
-		proceedButton.setBounds(535, 392, 89, 23);
-		frame.getContentPane().add(proceedButton);
-
-		proceedButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (btnGroup.isSelected(null)) {
-					JLabel lblNewLabel_1 = new JLabel("Please choose an option");
-					lblNewLabel_1.setForeground(Color.RED);
-					lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-					lblNewLabel_1.setBounds(486, 375, 138, 14);
-					frame.getContentPane().add(lblNewLabel_1);
-					frame.repaint();
-				} else {
-					ArrayList<IOption> options = new ArrayList<>(Arrays.asList(new Song(frame), new Album(frame),
-							new Playlist(frame), new Singer(frame), new Band(frame), new User(frame)));
-					String selection = getSelectedButton(btnGroup);
-					if (comboBox.getSelectedItem().equals("Retrieve")) {
-						options.forEach((IOption option) -> {
-							if (selection.equals(option.toString())) {
-								option.retrieve();
-							}
-						});
-					} else if (comboBox.getSelectedItem().equals("Insert")) {
-						options.forEach((IOption option) -> {
-							if (selection.equals(option.toString())) {
-								option.insert();
-							}
-						});
-					} else if (comboBox.getSelectedItem().equals("Update")) {
-						options.forEach((IOption option) -> {
-							if (selection.equals(option.toString())) {
-								option.update();
-							}
-						});
-					} else if (comboBox.getSelectedItem().equals("Delete")) {
-						options.forEach((IOption option) -> {
-							if (selection.equals(option.toString())) {
-								option.delete();
-							}
-						});
+						btnGroup.add(radioBtn1);
+						btnGroup.add(radioBtn2);
+						btnGroup.add(radioBtn3);
+						btnGroup.add(radioBtn4);
+						btnGroup.add(radioBtn5);
+						btnGroup.add(radioBtn6);
+						frame.repaint();
 					}
 				}
-			}
-		});
+			});
+
+			frame.getContentPane().add(comboBox);
+
+			JButton proceedButton = new JButton("Proceed");
+			proceedButton.setBounds(535, 392, 89, 23);
+			frame.getContentPane().add(proceedButton);
+
+			proceedButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (btnGroup.isSelected(null)) {
+						JLabel lblNewLabel_1 = new JLabel("Please choose an option");
+						lblNewLabel_1.setForeground(Color.RED);
+						lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+						lblNewLabel_1.setBounds(486, 375, 138, 14);
+						frame.getContentPane().add(lblNewLabel_1);
+						frame.repaint();
+					} else {
+						ArrayList<IOption> options = new ArrayList<>(Arrays.asList(new Artist(frame, c), new Releasable(frame, c),
+								new Playlist(frame, c), new RecordLabel(frame, c), new User(frame, c), new Award(frame, c)));
+						String selection = getSelectedButton(btnGroup);
+						boolean entered = false;
+						if (comboBox.getSelectedItem().equals("Retrieve")) {
+							options.forEach((IOption option) -> {
+								if (selection.equals(option.toString())) {
+									option.retrieve();
+								}
+							});
+						} else if (comboBox.getSelectedItem().equals("Insert")) {
+							options.forEach((IOption option) -> {
+								if (selection.equals(option.toString())) {
+									option.insert();
+								}
+							});
+						} else if (comboBox.getSelectedItem().equals("Update")) {
+							options.forEach((IOption option) -> {
+								if (selection.equals(option.toString())) {
+									option.update();
+								}
+							});
+						} else if (comboBox.getSelectedItem().equals("Delete")) {
+							options.forEach((IOption option) -> {
+								if (selection.equals(option.toString())) {
+									option.delete();
+								}
+							});
+						}
+					}
+				}
+			});
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		
 
 	}
 

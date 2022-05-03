@@ -1,6 +1,7 @@
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.Arrays;
 
 import javax.swing.*;
@@ -8,9 +9,13 @@ import javax.swing.*;
 public class Playlist implements IOption {
 
 	final private JFrame frame;
+	final private Connection connection;
 
-	Playlist(JFrame frame) {
+	Playlist(JFrame frame, Connection c) {
 		this.frame = frame;
+		this.frame.getContentPane().removeAll();;
+		this.frame.repaint();
+		this.connection = c;
 		
 		JButton backButton = new JButton("Back");
 		backButton.setBounds(10, 392, 89, 23);
@@ -51,7 +56,7 @@ public class Playlist implements IOption {
 		JTextField titleField = new JTextField();
 		titleField.setBounds(10, 70, 200, 25);
 
-		JLabel userLabel = new JLabel("User");
+		JLabel userLabel = new JLabel("User ID");
 		userLabel.setBounds(10, 100, 200, 14);
 		JTextField userField = new JTextField();
 		userField.setBounds(10, 120, 200, 25);
@@ -60,9 +65,14 @@ public class Playlist implements IOption {
 		numOfSongsLabel.setBounds(10, 150, 200, 14);
 		JTextField numOfSongsField = new JTextField();
 		numOfSongsField.setBounds(10, 170, 200, 25);
+		
+		JLabel musicIdLabel = new JLabel("Music ID");
+		musicIdLabel.setBounds(10, 150, 200, 14);
+		JTextField musicIdField = new JTextField();
+		musicIdField.setBounds(10, 170, 200, 25);
 
-		JLabel[] labels = { insertLabel, titleLabel, userLabel, numOfSongsLabel };
-		JTextField[] textFields = { titleField, userField, numOfSongsField };
+		JLabel[] labels = { insertLabel, titleLabel, userLabel, numOfSongsLabel, musicIdLabel };
+		JTextField[] textFields = { titleField, userField, numOfSongsField, musicIdField };
 
 		Arrays.asList(labels).forEach((JLabel label) -> {
 			frame.add(label);
