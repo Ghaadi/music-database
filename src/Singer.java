@@ -50,22 +50,22 @@ public class Singer implements IOption {
 		textField.setBounds(120, 9, 150, 22);
 		frame.getContentPane().add(textField);
 
-		try {
-			Statement statement = connection.createStatement();
-			String sql = "Select * from SINGER s where s.name = " + textField.getText();
-			ResultSet resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				String id = resultSet.getString(1);
-				String name = resultSet.getString(2);
-				String nationality = resultSet.getString(3);
-				Date date_of_birth = resultSet.getDate(4);
-				String aID = resultSet.getString(5);
-			}
-			resultSet.close();
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Statement statement = connection.createStatement();
+//			String sql = "Select * from SINGER s where s.name = " + textField.getText();
+//			ResultSet resultSet = statement.executeQuery(sql);
+//			while (resultSet.next()) {
+//				String id = resultSet.getString(1);
+//				String name = resultSet.getString(2);
+//				String nationality = resultSet.getString(3);
+//				Date date_of_birth = resultSet.getDate(4);
+//				String aID = resultSet.getString(5);
+//			}
+//			resultSet.close();
+//			statement.close();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
@@ -115,18 +115,18 @@ public class Singer implements IOption {
 		});
 		
 		String sql = "Insert INTO Singer Values(" + nameField.getText() + ", " + nationalityField.getText() +  ", " + dateOfBirthField.getText() + ", " + artistIdField.getText() + ")";
-			try {
-				PreparedStatement prepStmt = connection.prepareStatement(sql);
-				prepStmt.setString(1, nameField.getText());
-				prepStmt.setString(2, nationalityField.getText());
-				prepStmt.setString(3, dateOfBirthField.getText());
-				prepStmt.setString(4, artistIdField.getText());
-
-				prepStmt.executeUpdate();
-				prepStmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				PreparedStatement prepStmt = connection.prepareStatement(sql);
+//				prepStmt.setString(1, nameField.getText());
+//				prepStmt.setString(2, nationalityField.getText());
+//				prepStmt.setString(3, dateOfBirthField.getText());
+//				prepStmt.setString(4, artistIdField.getText());
+//
+//				prepStmt.executeUpdate();
+//				prepStmt.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
 
 	}
 
@@ -147,15 +147,16 @@ public class Singer implements IOption {
 		textField.setBounds(120, 9, 150, 22);
 		frame.getContentPane().add(textField);
 		
-		try{
-			Statement statement = connection.createStatement();
-			String sql = "Delete * from SINGER s where s.name = " + textField.getText(); 
-			ResultSet resultSet = statement.executeQuery(sql);
-			resultSet.close();
-			statement.close();
-			}
-			catch (SQLException e) {e.printStackTrace();}
-			}
+//		try{
+//			Statement statement = connection.createStatement();
+//			String sql = "Delete * from SINGER s where s.name = " + textField.getText();
+//			ResultSet resultSet = statement.executeQuery(sql);
+//			resultSet.close();
+//			statement.close();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+	}
 
 
 	public String toString() {

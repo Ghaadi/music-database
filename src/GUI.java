@@ -6,6 +6,7 @@ import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.sql.*;
+import com.mysql.cj.jdbc.*;
 
 public class GUI {
 
@@ -47,12 +48,12 @@ public class GUI {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	void initialize(JFrame frame) {
 		
-		String url = "jdbc:mysql://localhost/PROJECT";
+		String url = "jdbc:mysql://localhost:3306/PROJECT";
 		String username = "root";
-		String password = "ghadi123";
+		String password = "";
 
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
+		try { 
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection c = DriverManager.getConnection(url, username, password); // do something with connection\
 			
 			JLabel lblNewLabel = new JLabel("Choose an action:");
