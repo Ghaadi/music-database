@@ -15,9 +15,9 @@ public class RecordLabel implements IOption {
 		this.frame.getContentPane().removeAll();
 		this.frame.repaint();
 		this.connection = c;
-		JButton proceedButton = new JButton("Proceed");
-		proceedButton.setBounds(535, 392, 89, 23);
-		frame.getContentPane().add(proceedButton);
+//		JButton proceedButton = new JButton("Proceed");
+//		proceedButton.setBounds(535, 392, 89, 23);
+//		frame.getContentPane().add(proceedButton);
 
 		JButton backButton = new JButton("Back");
 		backButton.setBounds(10, 392, 89, 23);

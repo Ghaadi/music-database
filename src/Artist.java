@@ -36,7 +36,7 @@ public class Artist implements IOption {
 
 	}
 
-	private void proceedAction(JButton proceedButton) {
+	private void proceedInsert(JButton proceedButton) {
 		proceedButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (btnGroup.isSelected(null)) {
@@ -50,23 +50,16 @@ public class Artist implements IOption {
 					ArrayList<IOption> options = new ArrayList<>(
 							Arrays.asList(new Singer(frame, connection), new Band(frame, connection)));
 					String selection = getSelectedButton(btnGroup);
-					if (getSelectedButton(btnGroup).equals("Singers")) {
-						options.forEach((IOption option) -> {
-							if (selection.equals(option.toString())) {
-								option.insert();
-							}
-						});
-					} else if (getSelectedButton(btnGroup).equals("Bands")) {
-						options.forEach((IOption option) -> {
-							if (selection.equals(option.toString())) {
-								option.insert();
-							}
-						});
-					}
+					options.forEach((IOption option) -> {
+						if (selection.equals(option.toString())) {
+							option.insert();
+						}
+					});
 				}
 			}
 		});
 	}
+
 
 	private void backAction(JButton backButton) {
 		backButton.addActionListener(new ActionListener() {
@@ -88,13 +81,49 @@ public class Artist implements IOption {
 		JTextField textField = new JTextField();
 		textField.setBounds(120, 9, 150, 22);
 		frame.getContentPane().add(textField);
+
+		JButton proceedButton = new JButton("Proceed");
+		proceedButton.setBounds(535, 392, 89, 23);
+		frame.getContentPane().add(proceedButton);
+
+//		proceedRetrieve(proceedButton, textField.getText());
+		proceedButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (textField.getText().length() > 0) {
+					try {
+						Statement statement = connection.createStatement();
+						String sql = "Select * from SINGER s where s.name = \"" + textField.getText() + "\"";
+						ResultSet resultSet = statement.executeQuery(sql);
+						while (resultSet.next()) {
+							String id = resultSet.getString(1);
+							String name = resultSet.getString(2);
+							String nationality = resultSet.getString(3);
+							Date date_of_birth = resultSet.getDate(4);
+							String aID = resultSet.getString(5);
+							JLabel t = new JLabel(id + " " + name + " " + nationality);
+							t.setFont(new Font("Tahoma", Font.PLAIN, 14));
+							t.setBounds(50, 50, 200, 200);
+							frame.getContentPane().add(t);
+							System.out.println(t.getText());
+							frame.repaint();
+						}
+						resultSet.close();
+						statement.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+
+
 	}
 
 	public void insert() {
 		JButton proceedButton = new JButton("Proceed");
 		proceedButton.setBounds(535, 392, 89, 23);
 		frame.getContentPane().add(proceedButton);
-		proceedAction(proceedButton);
+		proceedInsert(proceedButton);
 
 		JButton backButton = new JButton("Back");
 		backButton.setBounds(10, 392, 89, 23);
