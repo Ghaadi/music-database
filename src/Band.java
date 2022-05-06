@@ -10,12 +10,22 @@ public class Band implements IOption {
 
 	final private JFrame frame;
 	final private Connection connection;
+	final String artistID;
 
 	public Band(JFrame frame, Connection c) {
 		this.frame = frame;
 		this.frame.getContentPane().removeAll();
 		this.frame.repaint();
 		this.connection = c;
+		this.artistID = "";
+	}
+	
+	public Band(JFrame frame, Connection c, String artistID) {
+		this.frame = frame;
+		this.frame.getContentPane().removeAll();
+		this.frame.repaint();
+		this.connection = c;
+		this.artistID = artistID;
 	}
 	
 	private void proceedAction(JButton proceedButton) {

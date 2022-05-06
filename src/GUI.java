@@ -6,7 +6,6 @@ import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.sql.*;
-import com.mysql.cj.jdbc.*;
 
 public class GUI {
 
@@ -89,13 +88,13 @@ public class GUI {
 						radioBtn5.setBounds(10, 130, 109, 23);
 						frame.getContentPane().add(radioBtn5);
 
-						JRadioButton radioBtn6 = new JRadioButton("Playlists");
-						radioBtn6.setBounds(10, 150, 109, 23);
-
-						if (comboBox.getSelectedItem().equals("Retrieve") || comboBox.getSelectedItem().equals("Delete")) {
-							frame.getContentPane().add(radioBtn6);
-						}
-						
+//						JRadioButton radioBtn6 = new JRadioButton("Playlists");
+//						radioBtn6.setBounds(10, 150, 109, 23);
+//
+//						if (comboBox.getSelectedItem().equals("Retrieve") || comboBox.getSelectedItem().equals("Delete")) {
+//							frame.getContentPane().add(radioBtn6);
+//						}
+//						
 //						frame.getContentPane().add(radioBtn5);
 	//
 //						JRadioButton radioBtn6 = new JRadioButton("Users");
@@ -107,7 +106,7 @@ public class GUI {
 						btnGroup.add(radioBtn3);
 						btnGroup.add(radioBtn4);
 						btnGroup.add(radioBtn5);
-						btnGroup.add(radioBtn6);
+//						btnGroup.add(radioBtn6);
 						frame.repaint();
 					}
 				}
@@ -132,7 +131,6 @@ public class GUI {
 						ArrayList<IOption> options = new ArrayList<>(Arrays.asList(new Artist(frame, c), new Releasable(frame, c),
 								new Playlist(frame, c), new RecordLabel(frame, c), new User(frame, c), new Award(frame, c)));
 						String selection = getSelectedButton(btnGroup);
-						boolean entered = false;
 						if (comboBox.getSelectedItem().equals("Retrieve")) {
 							options.forEach((IOption option) -> {
 								if (selection.equals(option.toString())) {

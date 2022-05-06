@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -14,19 +12,22 @@ public class Singer implements IOption {
 
 	final private JFrame frame;
 	final private Connection connection;
+	final String artistID;
 
 	public Singer(JFrame frame, Connection c) {
 		this.frame = frame;
 		this.frame.getContentPane().removeAll();
 		this.frame.repaint();
 		this.connection = c;
+		this.artistID = "";
 	}
 
-	private void proceedAction(JButton proceedButton) {
-		proceedButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+	public Singer(JFrame frame, Connection c, String artistID) {
+		this.frame = frame;
+		this.frame.getContentPane().removeAll();
+		this.frame.repaint();
+		this.connection = c;
+		this.artistID = artistID;
 	}
 
 	private void backAction(JButton backButton) {
@@ -35,7 +36,26 @@ public class Singer implements IOption {
 				frame.getContentPane().removeAll();
 				frame.revalidate();
 				frame.repaint();
-				new GUI().initialize(frame);
+
+				String sqlMaxArtist = "SELECT max(ID) from ARTIST";
+
+				try {
+					Statement statement = connection.createStatement();
+					ResultSet resultSet = statement.executeQuery(sqlMaxArtist);
+					resultSet.next();
+					String artistID = resultSet.getString(1);
+
+					String sql = "DELETE FROM Artist WHERE ID = " + artistID;
+					statement.execute(sql);
+					frame.getContentPane().removeAll();
+					frame.revalidate();
+					frame.repaint();
+					new GUI().initialize(frame);
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+
+				
 			}
 		});
 	}
@@ -58,7 +78,6 @@ public class Singer implements IOption {
 		proceedButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textField.getText().length() > 0) {
-
 					try {
 						Statement statement = connection.createStatement();
 						String sql = "Select a.ID, s.name,s.nationality,s.date_of_birth, a.active_years, a.website From ARTIST a JOIN SINGER s ON (a.name=s.name AND s.name = \""
@@ -114,7 +133,6 @@ public class Singer implements IOption {
 		JButton proceedButton = new JButton("Proceed");
 		proceedButton.setBounds(535, 392, 89, 23);
 		frame.getContentPane().add(proceedButton);
-		proceedAction(proceedButton);
 
 		JButton backButton = new JButton("Back");
 		backButton.setBounds(10, 392, 89, 23);
@@ -124,28 +142,18 @@ public class Singer implements IOption {
 		JLabel insertLabel = new JLabel("Insert Singer:");
 		insertLabel.setBounds(10, 10, 200, 20);
 
-		JLabel nameLabel = new JLabel("Name");
-		nameLabel.setBounds(10, 50, 200, 14);
-		JTextField nameField = new JTextField();
-		nameField.setBounds(10, 70, 200, 25);
-
 		JLabel nationalityLabel = new JLabel("Nationality");
-		nationalityLabel.setBounds(10, 100, 200, 14);
+		nationalityLabel.setBounds(10, 50, 200, 14);
 		JTextField nationalityField = new JTextField();
-		nationalityField.setBounds(10, 120, 200, 25);
+		nationalityField.setBounds(10, 70, 200, 25);
 
 		JLabel dateOfBirthLabel = new JLabel("Date of Birth");
-		dateOfBirthLabel.setBounds(10, 150, 200, 14);
+		dateOfBirthLabel.setBounds(10, 100, 200, 14);
 		JTextField dateOfBirthField = new JTextField();
-		dateOfBirthField.setBounds(10, 170, 200, 25);
+		dateOfBirthField.setBounds(10, 120, 200, 25);
 
-		JLabel artistIdLabel = new JLabel("Artist ID");
-		artistIdLabel.setBounds(10, 200, 200, 14);
-		JTextField artistIdField = new JTextField();
-		artistIdField.setBounds(10, 220, 200, 25);
-
-		JLabel[] labels = { insertLabel, nameLabel, nationalityLabel, dateOfBirthLabel, artistIdLabel };
-		JTextField[] textFields = { nameField, nationalityField, dateOfBirthField, artistIdField };
+		JLabel[] labels = { insertLabel, nationalityLabel, dateOfBirthLabel };
+		JTextField[] textFields = { nationalityField, dateOfBirthField };
 
 		Arrays.asList(labels).forEach((JLabel label) -> {
 			frame.add(label);
@@ -155,26 +163,130 @@ public class Singer implements IOption {
 			frame.add(textField);
 		});
 
-//		String sql = "Insert INTO Singer Values(" + nameField.getText() + ", " + nationalityField.getText() + ", "
-//				+ dateOfBirthField.getText() + ", " + artistIdField.getText() + ")";
-//			try {
-//				PreparedStatement prepStmt = connection.prepareStatement(sql);
-//				prepStmt.setString(1, nameField.getText());
-//				prepStmt.setString(2, nationalityField.getText());
-//				prepStmt.setString(3, dateOfBirthField.getText());
-//				prepStmt.setString(4, artistIdField.getText());
-//
-//				prepStmt.executeUpdate();
-//				prepStmt.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
+		proceedButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (nationalityField.getText().length() == 0 || dateOfBirthField.getText().length() == 0) {
+					JLabel lblNewLabel_1 = new JLabel("Please fill the fields");
+					lblNewLabel_1.setForeground(Color.RED);
+					lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+					lblNewLabel_1.setBounds(486, 375, 138, 14);
+					frame.getContentPane().add(lblNewLabel_1);
+					frame.repaint();
+				} else {
+					String sqlMaxSinger = "SELECT max(singerID) from SINGER";
+					String sqlMaxArtist = "SELECT max(ID) from ARTIST";
+					String sql = "Insert INTO Singer Values(?, ?, ?, ?, ?)";
+					try {
+						Statement statement = connection.createStatement();
+						ResultSet resultSet = statement.executeQuery(sqlMaxArtist);
+						resultSet.next();
+						int artistID = Integer.valueOf(resultSet.getString(1));
+						resultSet = statement.executeQuery(sqlMaxSinger);
+						resultSet.next();
+						int singerID = Integer.valueOf(resultSet.getString(1)) + 1;
+
+						String sqlName = "Select name from ARTIST where ID = " + String.valueOf(artistID);
+						resultSet = statement.executeQuery(sqlName);
+						resultSet.next();
+						String singerName = resultSet.getString(1);
+
+						Date dateOfBirth = Date.valueOf(dateOfBirthField.getText());
+
+						resultSet.close();
+						statement.close();
+						PreparedStatement prepStmt = connection.prepareStatement(sql);
+						prepStmt.setString(1, String.valueOf(singerID));
+						prepStmt.setString(2, singerName);
+						prepStmt.setString(3, nationalityField.getText());
+						prepStmt.setDate(4, dateOfBirth);
+						prepStmt.setString(5, String.valueOf(artistID));
+
+						prepStmt.executeUpdate();
+						prepStmt.close();
+
+						frame.getContentPane().removeAll();
+						frame.revalidate();
+						frame.repaint();
+						new GUI().initialize(frame);
+					} catch (SQLException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
 
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		JButton proceedButton = new JButton("Proceed");
+		proceedButton.setBounds(535, 392, 89, 23);
+		frame.getContentPane().add(proceedButton);
+
+		JButton backButton = new JButton("Back");
+		backButton.setBounds(10, 392, 89, 23);
+		frame.getContentPane().add(backButton);
+		backAction(backButton);
+
+		JLabel insertLabel = new JLabel("Update Singer:");
+		insertLabel.setBounds(10, 10, 200, 20);
+
+		JLabel nationalityLabel = new JLabel("Nationality");
+		nationalityLabel.setBounds(10, 50, 200, 14);
+		JTextField nationalityField = new JTextField();
+		nationalityField.setBounds(10, 70, 200, 25);
+
+		JLabel dateOfBirthLabel = new JLabel("Date of Birth");
+		dateOfBirthLabel.setBounds(10, 100, 200, 14);
+		JTextField dateOfBirthField = new JTextField();
+		dateOfBirthField.setBounds(10, 120, 200, 25);
+
+		JLabel[] labels = { insertLabel, nationalityLabel, dateOfBirthLabel };
+		JTextField[] textFields = { nationalityField, dateOfBirthField };
+
+		Arrays.asList(labels).forEach((JLabel label) -> {
+			frame.getContentPane().add(label);
+		});
+
+		Arrays.asList(textFields).forEach((JTextField textField) -> {
+			frame.getContentPane().add(textField);
+		});
+
+		proceedButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String sql = "UPDATE Singer SET";
+					boolean hasEntered = false;
+
+					if (nationalityField.getText().length() > 0) {
+						sql += " nationality = \"" + nationalityField.getText() + "\"";
+						hasEntered = true;
+					}
+
+					if (dateOfBirthField.getText().length() > 0) {
+						if (!hasEntered) {
+							sql += " date_of_birth = \"" + dateOfBirthField.getText() + "\"";
+							hasEntered = true;
+						} else {
+							sql += ", date_of_birth = \"" + dateOfBirthField.getText() + "\"";
+						}
+					}
+
+					sql += " WHERE aID = " + artistID;
+
+					PreparedStatement prepStmt = connection.prepareStatement(sql);
+					prepStmt.execute();
+					
+					frame.getContentPane().removeAll();
+					frame.revalidate();
+					frame.repaint();
+					new GUI().initialize(frame);
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 
 	}
 
@@ -189,15 +301,6 @@ public class Singer implements IOption {
 		textField.setBounds(120, 9, 150, 22);
 		frame.getContentPane().add(textField);
 
-//		try{
-//			Statement statement = connection.createStatement();
-//			String sql = "Delete * from SINGER s where s.name = " + textField.getText();
-//			ResultSet resultSet = statement.executeQuery(sql);
-//			resultSet.close();
-//			statement.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	public String toString() {
