@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class Artist implements IOption {
 
@@ -60,7 +61,6 @@ public class Artist implements IOption {
 		});
 	}
 
-
 	private void backAction(JButton backButton) {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -82,40 +82,92 @@ public class Artist implements IOption {
 		textField.setBounds(120, 9, 150, 22);
 		frame.getContentPane().add(textField);
 
+		ButtonGroup btnGroup = new ButtonGroup();
+
+		JRadioButton radioBtn1 = new JRadioButton("Singers");
+		radioBtn1.setBounds(10, 50, 109, 23);
+		frame.getContentPane().add(radioBtn1);
+
+		JRadioButton radioBtn2 = new JRadioButton("Bands");
+		radioBtn2.setBounds(10, 70, 109, 23);
+		frame.getContentPane().add(radioBtn2);
+
+		btnGroup.add(radioBtn1);
+		btnGroup.add(radioBtn2);
+
 		JButton proceedButton = new JButton("Proceed");
 		proceedButton.setBounds(535, 392, 89, 23);
 		frame.getContentPane().add(proceedButton);
 
-//		proceedRetrieve(proceedButton, textField.getText());
 		proceedButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (textField.getText().length() > 0) {
-					try {
-						Statement statement = connection.createStatement();
-						String sql = "Select * from SINGER s where s.name = \"" + textField.getText() + "\"";
-						ResultSet resultSet = statement.executeQuery(sql);
-						while (resultSet.next()) {
-							String id = resultSet.getString(1);
-							String name = resultSet.getString(2);
-							String nationality = resultSet.getString(3);
-							Date date_of_birth = resultSet.getDate(4);
-							String aID = resultSet.getString(5);
-							JLabel t = new JLabel(id + " " + name + " " + nationality);
-							t.setFont(new Font("Tahoma", Font.PLAIN, 14));
-							t.setBounds(50, 50, 200, 200);
-							frame.getContentPane().add(t);
-							System.out.println(t.getText());
-							frame.repaint();
+
+				if (btnGroup.isSelected(null)) {
+					JLabel lblNewLabel_1 = new JLabel("Please choose an option");
+					lblNewLabel_1.setForeground(Color.RED);
+					lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+					lblNewLabel_1.setBounds(486, 375, 138, 14);
+					frame.getContentPane().add(lblNewLabel_1);
+					frame.repaint();
+				} else {
+					ArrayList<IOption> options = new ArrayList<>(
+							Arrays.asList(new Singer(frame, connection), new Band(frame, connection)));
+					String selection = getSelectedButton(btnGroup);
+					boolean entered = false;
+					options.forEach((IOption option) -> {
+						if (selection.equals(option.toString())) {
+							option.retrieve();
 						}
-						resultSet.close();
-						statement.close();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					});
 				}
 			}
-		});
 
+//				if (textField.getText().length() > 0) {
+//
+//					try {
+//						Statement statement = connection.createStatement();
+//						String sql = "Select * from SINGER s where s.name = \"" + textField.getText() + "\"";
+//
+//						ResultSet resultSet = statement.executeQuery(sql);
+//						String[] columns = { "ID", "Name", "Nationality", "Date of Birth", "Artist ID" };
+//						
+//						DefaultTableModel model = new DefaultTableModel();
+//						JTable table = new JTable(model);
+//						table.setBounds(30,40,500,500);          
+//						JScrollPane sp = new JScrollPane(table);
+//						frame.add(sp);
+//						frame.add(table);
+//						
+//						for(String s : columns) {
+//							model.addColumn(s);
+//						}
+//						
+//						model.addRow(columns);
+//						
+//						ArrayList<Object[]> values = new ArrayList<>();
+//
+//						while (resultSet.next()) {
+//							String id = resultSet.getString(1);
+//							String name = resultSet.getString(2);
+//							String nationality = resultSet.getString(3);
+//							Date dateOfBirth = resultSet.getDate(4);
+//							String aID = resultSet.getString(5);
+//							values.add(new Object[] { id, name, nationality, dateOfBirth.toString(), aID });
+//						}
+//
+//						for(Object[] arr : values) {
+//							model.addRow(arr);
+//						}
+//						
+//					    frame.repaint();
+//
+//						resultSet.close();
+//						statement.close();
+//					} catch (SQLException e1) {
+//						e1.printStackTrace();
+//					}
+//				}
+		});
 
 	}
 
